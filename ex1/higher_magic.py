@@ -7,11 +7,11 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/11 14:51:55 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/11 15:28:07 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/12 11:43:15 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
-from typing import List
+from typing import List, Any
 
 
 green = "\033[32m\033[1m\033[1m"
@@ -21,14 +21,13 @@ brown = "\033[0;33m"
 blue = "\033[38;5;67m"
 reset = "\033[0m"
 
+spells = ["Alter Invisibility", "Field of Frost", "test"]
+
 # =============================================================================
 # ============================= FONCTIONS =====================================
 # =============================================================================
 
 
-# Return a new function that calls both spells with the same arguments
-# The combined spell should return a tuple of both results
-# Example: combined = spell_combiner(fireball, heal)
 def spell_combiner(spell1: callable, spell2: callable) -> callable:
 
     def combine(name: str) -> tuple:
@@ -37,32 +36,32 @@ def spell_combiner(spell1: callable, spell2: callable) -> callable:
     return (combine)
 
 
-# Return a new function that multiplies the base spell’s result by multiplier
-# Assume base spell returns a number (damage, healing, etc.)
-# Example: mega_fireball = power_amplifier(fireball, 3)
-def power_amplifier(base_spell: callable, multiplier: int) -> callable:
+def power_amplifier(waterball: callable, multiplier: int) -> callable:
 
     def multiplies(power: int) -> tuple:
-        return (power, base_spell(power) * multiplier)
+        return (power, waterball(power) * multiplier)
 
     return (multiplies)
 
 
-# Return a function that only casts the spell if condition returns True
-# If condition fails, return "Spell fizzled"
-# Both condition and spell receive the same arguments
 def conditional_caster(condition: callable, spell: callable) -> callable:
-    pass
+
+    def caste(name: str) -> Any:
+        return (spell(name) if condition(name) is True
+                else f"Spell \"{name}\" fizzled")
+
+    return (caste)
 
 
-# Return a function that casts all spells in order
-# Each spell receives the same arguments
-# Return a list of all spell results
 def spell_sequence(spells: List[callable]) -> callable:
-    pass
+
+    def sequence(name: str) -> List[str]:
+        return [spell(name) for spell in spells]
+
+    return (sequence)
 
 # =============================================================================
-# ============================== UTILITY ======================================
+# ============================ UTILITIES ======================================
 # =============================================================================
 
 
@@ -74,8 +73,25 @@ def heals(name: str) -> str:
     return (f"Heals {name}")
 
 
-def amp(power: int) -> int:
+def attack(name: str) -> str:
+    return (f"Attacks {name}")
+
+
+def waterball(power: int) -> int:
     return (power)
+
+
+def condition(spell: str) -> bool:
+    return (True if spell in spells else False)
+
+
+def spell_valid(spell: str) -> str:
+    return (f"The name \"{spell}\" is valid")
+
+
+# =============================================================================
+# =============================== MAIN ========================================
+# =============================================================================
 
 
 def main() -> None:
@@ -92,9 +108,27 @@ def main() -> None:
 # *                         power_amplifier()                                 *
 # *                                                                           *
 
-    print(f"{green}Testing power amplifier...{reset}")
-    ampli = power_amplifier(amp, 3)
-    print(f"Original: {ampli(10)[0]}, Amplified: {ampli(10)[1]}")
+    print("\n" + f"{green}Testing power amplifier...{reset}")
+    mega_waterball = power_amplifier(waterball, 3)
+    print(f"Original: {mega_waterball(10)[0]}, "
+          f"Amplified: {mega_waterball(10)[1]}")
+
+# *****************************************************************************
+# *                        conditional_caster()                               *
+# *                                                                           *
+
+    print("\n" + f"{green}Testing conditional caster...{reset}")
+    caster = conditional_caster(condition, spell_valid)
+    print(caster("Field of Frost"))
+
+# *****************************************************************************
+# *                          spell_sequence()                                 *
+# *                                                                           *
+
+    print("\n" + f"{green}Testing spell sequence...{reset}")
+    sequences = spell_sequence([fireball, heals, attack])
+    for sequence in sequences("dragon"):
+        print(sequence)
 
 
 if __name__ == "__main__":
