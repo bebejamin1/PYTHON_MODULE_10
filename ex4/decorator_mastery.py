@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/12 15:02:39 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/12 16:03:39 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/12 17:41:07 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -45,41 +45,52 @@ def spell_timer(func: callable) -> callable:
     return (wrapper)
 
 
-# Create a decorator factory that validates power levels
-# Check if the first argument (power) is >= min_power
-# If valid, execute the function normally
-# If invalid, return "Insufficient power for this spell"
-# Use functools.wraps properly
 def power_validator(min_power: int) -> callable:
-    
+
     def func_validator(func: callable) -> callable:
 
         @wraps(func)
         def wrapper(*args, **kwargs) -> callable:
+
             if (len(args) > 1):
                 if (args[2] >= min_power):
                     return (func(*args, **kwargs))
-            elif:
+            elif (len(args) <= 1):
                 if (args[0] >= min_power):
                     return (func(*args, **kwargs))
             return ("Insufficient power for this spell")
+
         return (wrapper)
 
     return (func_validator)
 
 
-# Create a decorator that retries failed spells
-# If function raises an exception, retry up to max_attempts times
-# Print "Spell failed, retrying... (attempt n/max_attempts)"
-# If all attempts fail, return "Spell casting failed after max_attempts attempts"
-# If successful, return the result normally
 def retry_spell(max_attempts: int) -> callable:
-    pass
+
+    def func_retry(func: callable) -> callable:
+
+        @wraps(func)
+        def wrapper(*args, **kwargs) -> callable:
+            test = 1
+            mana = args[0]
+            while (test <= max_attempts):
+                try:
+                    mana += 1
+                    return func(mana, **kwargs)
+                except Exception as e:
+                    print(f"{e} retrying... (attempt {test}/{max_attempts})")
+                test += 1
+            return f"Spell casting failed after {max_attempts} attempt"
+
+        return (wrapper)
+
+    return (func_retry)
 
 
 class MageGuild():
 
-    # Name is valid if it’s at least 3 characters and contains only letters/spaces
+    # Name is valid if it’s at least 3 characters and contains
+    # only letters/spaces
     @staticmethod
     def validate_mage_name(name: str) -> bool:
         pass
@@ -90,9 +101,27 @@ class MageGuild():
         pass
 
 
+# =============================================================================
+# ============================= UTILITIES =====================================
+# =============================================================================
+
+
 @spell_timer
 def fireball() -> str:
     return ("Fireball cast !")
+
+
+@power_validator(5)
+def cast_fireball(power: int) -> str:
+    return "Fireball casted successfully"
+
+
+@retry_spell(5)
+def retry_lightning(power: int) -> str:
+    if power < 8:
+        raise Exception("Spell failed")
+    return "lightning casted successfully"
+
 
 # =============================================================================
 # =============================== MAIN ========================================
@@ -107,6 +136,26 @@ def main() -> None:
     print(f"{green}Testing spell timer...{reset}")
     fire = fireball()
     print(fire)
+
+# *****************************************************************************
+# *                         power_validator()                                 *
+# *                                                                           *
+    print("\n" + f"{green}Testing power validator...{reset}")
+    mana = 8
+    print(f"Casting fireball with {mana} mana: {cast_fireball(mana)}")
+    mana = 2
+    print(f"Casting fireball with {mana} mana: {cast_fireball(mana)}")
+
+# *****************************************************************************
+# *                          retry_spell()                                    *
+# *                                                                           *
+    print("\n" + f"{green}Testing retry spell...{reset}")
+    print(f"Trying cast spell: {retry_lightning(5)}")
+
+# *****************************************************************************
+# *                           MageGuild()                                     *
+# *                                                                           *
+    print("\n" + f"{green}Testing MageGuild...{reset}")
 
 
 if __name__ == "__main__":
