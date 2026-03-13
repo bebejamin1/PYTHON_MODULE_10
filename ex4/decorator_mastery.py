@@ -7,12 +7,12 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/12 15:02:39 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/12 17:41:07 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 10:50:28 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 
-from typing import Any
+from typing import Any, Dict, Tuple, List
 
 from functools import wraps
 import time
@@ -27,14 +27,16 @@ reset = "\033[0m"
 
 
 # =============================================================================
-# ============================= FONCTIONS =====================================
+# ========================= FONCTIONS / CLASS =================================
 # =============================================================================
 
+
+# =============================== TIMER =======================================
 
 def spell_timer(func: callable) -> callable:
 
     @wraps(func)
-    def wrapper(*args, **kwargs) -> callable:
+    def wrapper(*args: Tuple[int, ...], **kwargs: Dict[str, int]) -> callable:
         start: float = time.perf_counter()
         result: Any = func(*args, **kwargs)
         end: float = time.perf_counter()
@@ -45,12 +47,19 @@ def spell_timer(func: callable) -> callable:
     return (wrapper)
 
 
+@spell_timer
+def fireball() -> str:
+    return ("Fireball cast !")
+
+
+# ============================= VALIDATOR =====================================
+
 def power_validator(min_power: int) -> callable:
 
     def func_validator(func: callable) -> callable:
 
         @wraps(func)
-        def wrapper(*args, **kwargs) -> callable:
+        def wrapper(*args: tuple, **kwargs: dict) -> callable:
 
             if (len(args) > 1):
                 if (args[2] >= min_power):
@@ -65,14 +74,21 @@ def power_validator(min_power: int) -> callable:
     return (func_validator)
 
 
+@power_validator(5)
+def cast_fireball(power: int) -> str:
+    return ("Fireball casted successfully")
+
+
+# =============================== RETRY =======================================
+
 def retry_spell(max_attempts: int) -> callable:
 
     def func_retry(func: callable) -> callable:
 
         @wraps(func)
-        def wrapper(*args, **kwargs) -> callable:
-            test = 1
-            mana = args[0]
+        def wrapper(*args: tuple, **kwargs: dict) -> callable:
+            test: int = 1
+            mana: int = args[0]
             while (test <= max_attempts):
                 try:
                     mana += 1
@@ -80,47 +96,38 @@ def retry_spell(max_attempts: int) -> callable:
                 except Exception as e:
                     print(f"{e} retrying... (attempt {test}/{max_attempts})")
                 test += 1
-            return f"Spell casting failed after {max_attempts} attempt"
+            return (f"{red}[ERROR]{reset} Spell casting failed "
+                    f"after {max_attempts} attempt")
 
         return (wrapper)
 
     return (func_retry)
 
 
-class MageGuild():
-
-    # Name is valid if it’s at least 3 characters and contains
-    # only letters/spaces
-    @staticmethod
-    def validate_mage_name(name: str) -> bool:
-        pass
-
-    # Should use the power_validator decorator with min_power=10
-    # Return "Successfully cast spell_name with power power"
-    def cast_spell(self, spell_name: str, power: int) -> str:
-        pass
-
-
-# =============================================================================
-# ============================= UTILITIES =====================================
-# =============================================================================
-
-
-@spell_timer
-def fireball() -> str:
-    return ("Fireball cast !")
-
-
-@power_validator(5)
-def cast_fireball(power: int) -> str:
-    return "Fireball casted successfully"
-
-
 @retry_spell(5)
 def retry_lightning(power: int) -> str:
     if power < 8:
         raise Exception("Spell failed")
-    return "lightning casted successfully"
+    return ("Lightning casted successfully")
+
+
+# ============================= MageGuild =====================================
+
+class MageGuild():
+
+    @staticmethod
+    def validate_mage_name(name: str) -> bool:
+        for n in name:
+            if (not n.isalpha() and not n.isspace() or len(name) <= 3):
+                return (False)
+        return (True)
+
+    @power_validator(10)
+    def cast_spell(self, spell_name: str, power: int) -> str:
+        if (self.validate_mage_name(spell_name)):
+            return (f"Successfuly cast {spell_name} with {power} power")
+        return ("The name must be >= 3 characters long " + "\n"
+                "and contain only letters and spaces.")
 
 
 # =============================================================================
@@ -133,29 +140,43 @@ def main() -> None:
 # *****************************************************************************
 # *                           spell_timer()                                   *
 # *                                                                           *
+
     print(f"{green}Testing spell timer...{reset}")
-    fire = fireball()
+    fire: str = fireball()
     print(fire)
 
 # *****************************************************************************
 # *                         power_validator()                                 *
 # *                                                                           *
+
     print("\n" + f"{green}Testing power validator...{reset}")
-    mana = 8
+    mana: int = 8
     print(f"Casting fireball with {mana} mana: {cast_fireball(mana)}")
-    mana = 2
+    mana: int = 2
     print(f"Casting fireball with {mana} mana: {cast_fireball(mana)}")
 
 # *****************************************************************************
 # *                          retry_spell()                                    *
 # *                                                                           *
+
     print("\n" + f"{green}Testing retry spell...{reset}")
     print(f"Trying cast spell: {retry_lightning(5)}")
 
 # *****************************************************************************
 # *                           MageGuild()                                     *
 # *                                                                           *
+
+    names: List[str] = ["lighting", "123456789"]
+    powers: List[int] = [15, 9]
+
     print("\n" + f"{green}Testing MageGuild...{reset}")
+    mage: MageGuild = MageGuild()
+
+    for name in names:
+        print(mage.validate_mage_name(name))
+
+    for name, power in zip(names, powers):
+        print(mage.cast_spell(name, power))
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/11 14:51:55 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/12 11:43:15 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 10:35:51 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -28,41 +28,14 @@ spells = ["Alter Invisibility", "Field of Frost", "test"]
 # =============================================================================
 
 
+# ============================= COMBINER ======================================
+
 def spell_combiner(spell1: callable, spell2: callable) -> callable:
 
     def combine(name: str) -> tuple:
         return (spell1(name), spell2(name))
 
     return (combine)
-
-
-def power_amplifier(waterball: callable, multiplier: int) -> callable:
-
-    def multiplies(power: int) -> tuple:
-        return (power, waterball(power) * multiplier)
-
-    return (multiplies)
-
-
-def conditional_caster(condition: callable, spell: callable) -> callable:
-
-    def caste(name: str) -> Any:
-        return (spell(name) if condition(name) is True
-                else f"Spell \"{name}\" fizzled")
-
-    return (caste)
-
-
-def spell_sequence(spells: List[callable]) -> callable:
-
-    def sequence(name: str) -> List[str]:
-        return [spell(name) for spell in spells]
-
-    return (sequence)
-
-# =============================================================================
-# ============================ UTILITIES ======================================
-# =============================================================================
 
 
 def fireball(name: str) -> str:
@@ -73,12 +46,29 @@ def heals(name: str) -> str:
     return (f"Heals {name}")
 
 
-def attack(name: str) -> str:
-    return (f"Attacks {name}")
+# ============================ AMPLIFIER ======================================
+
+def power_amplifier(waterball: callable, multiplier: int) -> callable:
+
+    def multiplies(power: int) -> tuple:
+        return (power, waterball(power) * multiplier)
+
+    return (multiplies)
 
 
 def waterball(power: int) -> int:
     return (power)
+
+
+# ============================= CASTER ========================================
+
+def conditional_caster(condition: callable, spell: callable) -> callable:
+
+    def caste(name: str) -> Any:
+        return (spell(name) if condition(name) is True
+                else f"Spell \"{name}\" fizzled")
+
+    return (caste)
 
 
 def condition(spell: str) -> bool:
@@ -87,6 +77,20 @@ def condition(spell: str) -> bool:
 
 def spell_valid(spell: str) -> str:
     return (f"The name \"{spell}\" is valid")
+
+
+# ============================= SEQUENCE ======================================
+
+def spell_sequence(spells: List[callable]) -> callable:
+
+    def sequence(name: str) -> List[str]:
+        return [spell(name) for spell in spells]
+
+    return (sequence)
+
+
+def attack(name: str) -> str:
+    return (f"Attacks {name}")
 
 
 # =============================================================================
@@ -101,7 +105,7 @@ def main() -> None:
 # *                          spell_combiner()                                 *
 # *                                                                           *
     print(f"{green}Testing spell combiner...{reset}")
-    combined = spell_combiner(fireball, heals)
+    combined: callable = spell_combiner(fireball, heals)
     print("Combined spell result:", *combined("Dragon"))
 
 # *****************************************************************************
@@ -109,7 +113,7 @@ def main() -> None:
 # *                                                                           *
 
     print("\n" + f"{green}Testing power amplifier...{reset}")
-    mega_waterball = power_amplifier(waterball, 3)
+    mega_waterball: callable = power_amplifier(waterball, 3)
     print(f"Original: {mega_waterball(10)[0]}, "
           f"Amplified: {mega_waterball(10)[1]}")
 
@@ -118,7 +122,7 @@ def main() -> None:
 # *                                                                           *
 
     print("\n" + f"{green}Testing conditional caster...{reset}")
-    caster = conditional_caster(condition, spell_valid)
+    caster: callable = conditional_caster(condition, spell_valid)
     print(caster("Field of Frost"))
 
 # *****************************************************************************
@@ -126,7 +130,7 @@ def main() -> None:
 # *                                                                           *
 
     print("\n" + f"{green}Testing spell sequence...{reset}")
-    sequences = spell_sequence([fireball, heals, attack])
+    sequences: callable = spell_sequence([fireball, heals, attack])
     for sequence in sequences("dragon"):
         print(sequence)
 

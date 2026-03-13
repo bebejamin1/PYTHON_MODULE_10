@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/11 10:03:44 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/12 10:08:25 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 10:33:37 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -46,17 +46,26 @@ spells = ["fireball", "heal", "shield"]
 # =============================================================================
 
 
+# ============================== SORTER =======================================
+
+
 def artifact_sorter(artifacts: List[dict]) -> List[dict]:
     return (list(sorted(artifacts, key=lambda x: x['power'], reverse=True)))
 
+
+# ============================== FILTER =======================================
 
 def power_filter(mages: List[dict], min_power: int) -> List[dict]:
     return (list(filter(lambda x: x['power'] >= min_power, mages)))
 
 
+# ============================ TRANSFORMER ====================================
+
 def spell_transformer(spells: List[str]) -> List[str]:
     return (list(map(lambda x: "* " + x + " *", spells)))
 
+
+# =============================== STATS =======================================
 
 def mage_stats(mages: List[dict]) -> dict:
     return {
@@ -66,53 +75,53 @@ def mage_stats(mages: List[dict]) -> dict:
            }
 
 
+# =============================================================================
+# ================================ MAIN =======================================
+# =============================================================================
+
 def main() -> None:
-    try:
-        print()
+    print()
 # *****************************************************************************
 # *                         artifact_sorter()                                 *
 # *                                                                           *
 
-        print(f"{green}Testing artifact sorter...{reset}")
+    print(f"{green}Testing artifact sorter...{reset}")
 
-        art_list = []
-        for artifact in artifact_sorter(artifacts):
-            art_list.append(f"{artifact['name']} ({artifact['power']} power)")
-        print(*art_list, sep=" comes before ")
+    art_list: list = []
+    for artifact in artifact_sorter(artifacts):
+        art_list.append(f"{artifact['name']} ({artifact['power']} power)")
+    print(*art_list, sep=" comes before ")
 
 # *****************************************************************************
 # *                          power_filter()                                   *
 # *                                                                           *
 
-        print("\n" + f"{green}Testing power filter...{reset}")
+    print("\n" + f"{green}Testing power filter...{reset}")
 
-        min_power = 9
-        print("All mages who have more power "
-              f"than the minimum power ({min_power})")
-        for mage in power_filter(mages, min_power):
-            print(f"{mage['name']} with {mage['power']}")
+    min_power: int = 9
+    print("All mages who have more power "
+          f"than the minimum power ({min_power})")
+    for mage in power_filter(mages, min_power):
+        print(f"{mage['name']} with {mage['power']}")
 
 # *****************************************************************************
 # *                        spell_transformer()                                *
 # *                                                                           *
 
-        print("\n" + f"{green}Testing spell map...{reset}")
+    print("\n" + f"{green}Testing spell map...{reset}")
 
-        spell = spell_transformer(spells)
-        print(*spell)
+    spell: List[str] = spell_transformer(spells)
+    print(*spell)
 
 # *****************************************************************************
 # *                           mage_stats()                                    *
 # *                                                                           *
 
-        print("\n" + f"{green}Testing mage stats...{reset}")
+    print("\n" + f"{green}Testing mage stats...{reset}")
 
-        stats = mage_stats(mages)
-        for ope, result in stats.items():
-            print(f"{ope} = {result}")
-
-    except NameError as e:
-        print(f"{red}[ERROR]{reset} {e}")
+    stats: dict = mage_stats(mages)
+    for ope, result in stats.items():
+        print(f"{ope} = {result}")
 
 
 if __name__ == "__main__":
