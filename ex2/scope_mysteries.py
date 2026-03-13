@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/12 10:59:57 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/13 10:52:02 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 11:20:08 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -24,6 +24,16 @@ reset = "\033[0m"
 # =============================================================================
 # ============================= FONCTIONS =====================================
 # =============================================================================
+"""
+Le mot-clé nonlocal permet de modifier une variable définie dans la portée
+de la fonction parente.
+
+Il est indispensable pour créer des fermetures (closures) capables de
+maintenir et de mettre à jour un état interne (comme un compteur ou un
+accumulateur) sans avoir recours aux variables globales. Il lie
+explicitement un nom de variable à l'espace de noms immédiatement supérieur
+qui n'est pas global.
+"""
 
 
 # ============================== COUNTER ======================================

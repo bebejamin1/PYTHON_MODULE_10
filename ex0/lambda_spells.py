@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/11 10:03:44 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/13 10:33:37 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 11:15:37 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -45,27 +45,43 @@ spells = ["fireball", "heal", "shield"]
 # ============================= FONCTIONS =====================================
 # =============================================================================
 
-
 # ============================== SORTER =======================================
+"""
+Sorted est le grand organisateur de ton inventaire.
+Il ne change pas l'apparence des mages et n'en oublie aucun
+en chemin : il se contente de leur attribuer une nouvelle place précise dans
+une liste toute neuve, en suivant scrupuleusement la règle que tu lui as donnée
+"""
 
 
 def artifact_sorter(artifacts: List[dict]) -> List[dict]:
-    return (list(sorted(artifacts, key=lambda x: x['power'], reverse=True)))
+    return (sorted(artifacts, key=lambda x: x['power'], reverse=True))
 
 
 # ============================== FILTER =======================================
+""" Filter agit comme un videur à l'entrée d'un club. """
+
 
 def power_filter(mages: List[dict], min_power: int) -> List[dict]:
     return (list(filter(lambda x: x['power'] >= min_power, mages)))
 
 
 # ============================ TRANSFORMER ====================================
+"""
+Contrairement à filter qui supprime des éléments,
+map est une usine de transformation. Elle prend 10 éléments en entrée et
+ressort exactement 10 éléments en sortie, mais avec un nouveau look """
+
 
 def spell_transformer(spells: List[str]) -> List[str]:
     return (list(map(lambda x: "* " + x + " *", spells)))
 
 
 # =============================== STATS =======================================
+"""
+Max et Min récupèrent les deux extrêmes
+Sum additionne toutes les valeurs une par une"""
+
 
 def mage_stats(mages: List[dict]) -> dict:
     return {

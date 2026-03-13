@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/11 14:51:55 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/13 10:35:51 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 11:18:05 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -26,6 +26,15 @@ spells = ["Alter Invisibility", "Field of Frost", "test"]
 # =============================================================================
 # ============================= FONCTIONS =====================================
 # =============================================================================
+"""
+En Python, les fonctions sont traitées comme n'importe quelle autre donnée.
+
+Elles peuvent être affectées à des variables, passées en tant qu'arguments
+à d'autres fonctions, renvoyées par des fonctions et stockées dans des
+structures de données. Cette flexibilité technique permet l'utilisation
+de patterns de programmation fonctionnelle comme les fonctions d'ordre
+supérieur, les closures et les décorateurs.
+"""
 
 
 # ============================= COMBINER ======================================

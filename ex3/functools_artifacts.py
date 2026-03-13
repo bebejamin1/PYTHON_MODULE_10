@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/12 13:09:34 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/13 10:44:03 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 11:24:49 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -30,8 +30,13 @@ reset = "\033[0m"
 
 
 # ============================== REDUCER ======================================
+""" reduce(f, [x_1, x_2, x_3, x_4])
+Reduce est le compresseur de ta bibliothèque
+Il fusionne une liste d'éléments en une seule valeur finale en les combinant
+deux par deux, de proche en proche, jusqu'à obtenir un résultat unique
+"""
 
-# applique une fonction de manière cumulative aux éléments d'un itérable
+
 def spell_reducer(spells: List[int], operation: str) -> int:
     if (operation == "add"):
         return (reduce(add, spells))
@@ -46,8 +51,16 @@ def spell_reducer(spells: List[int], operation: str) -> int:
 
 
 # ============================== PARTIAL ======================================
+"""
+Partial est le préparateur de commandes de ta bibliothèque.
 
-# PAS
+Il permet de créer une version "pré-remplie" d'un sort complexe en fixant
+certains de ses paramètres à l'avance (comme la puissance ou l'élément).
+Cela génère une nouvelle fonction plus simple qui ne demande plus que les
+informations manquantes (comme la cible) pour être lancée.
+"""
+
+
 def partial_enchanter(base_enchantment: callable) -> Dict[str, callable]:
     return {
         "fire_enchant": partial(base_enchantment, 50, "fire"),
@@ -61,8 +74,16 @@ def base_enchantment(power: int, element: str, target: str) -> str:
 
 
 # ============================= LRU_CACHE =====================================
+"""
+Lru_cache est le pupitre de lecture de ton archiviste.
 
-# ok
+Il retient en mémoire les résultats des calculs les plus récents pour éviter
+de les refaire plusieurs fois. Si tu lui redemandes le même sort, il te
+donne la réponse instantanément au lieu de retourner fouiller dans les
+tréfonds de la bibliothèque, ce qui booste énormément la vitesse de ton code.
+"""
+
+
 @lru_cache()
 def memoized_fibonacci(n: int) -> int:
     if n < 2:
@@ -71,8 +92,16 @@ def memoized_fibonacci(n: int) -> int:
 
 
 # ============================ DISPATCHER =====================================
+"""
+Le dispatcher est l'aiguilleur de ta bibliothèque.
 
-# oe
+Il examine la nature de l'objet que tu lui confies (un nombre pour les dégâts,
+un texte pour l'enchantement ou une liste pour le multi-cast) pour choisir
+automatiquement le traitement approprié. C'est une porte d'entrée unique qui
+redirige chaque type de donnée vers le sortilège qui lui correspond.
+"""
+
+
 def spell_dispatcher() -> callable:
     @singledispatch
     def dispatcher(s: Any) -> str:

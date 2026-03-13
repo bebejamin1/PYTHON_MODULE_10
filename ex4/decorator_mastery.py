@@ -7,7 +7,7 @@
 #   By: bbeaurai <bbeaurai@student.42lehavre.fr>     +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/03/12 15:02:39 by bbeaurai            #+#    #+#            #
-#   Updated: 2026/03/13 10:50:28 by bbeaurai           ###   ########.fr      #
+#   Updated: 2026/03/13 11:28:12 by bbeaurai           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -29,6 +29,15 @@ reset = "\033[0m"
 # =============================================================================
 # ========================= FONCTIONS / CLASS =================================
 # =============================================================================
+"""
+Le wrapper est l'emballage protecteur (ou le costume) de ton sortilège.
+
+C'est une fonction intermédiaire qui entoure ton sort original pour lui ajouter
+des pouvoirs supplémentaires sans modifier son code interne. Il permet
+d'effectuer des actions juste avant le lancement (comme vérifier la puissance)
+et juste après (comme calculer le temps d'exécution), tout en s'assurant que
+le sort produit bien son effet final.
+"""
 
 
 # =============================== TIMER =======================================
@@ -112,6 +121,15 @@ def retry_lightning(power: int) -> str:
 
 
 # ============================= MageGuild =====================================
+"""
+Le staticmethod est le code de conduite universel de ta guilde.
+
+C'est une règle ou un outil qui appartient à la guilde elle-même, mais qui ne
+dépend d'aucun mage en particulier. Tu n'as pas besoin de désigner un mage
+spécifique (pas de 'self') pour l'utiliser : c'est un savoir général que
+tout le monde peut consulter directement depuis le manuel de la guilde.
+"""
+
 
 class MageGuild():
 
